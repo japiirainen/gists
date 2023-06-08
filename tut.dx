@@ -1,0 +1,67 @@
+"Going through the 'Introduction to Dex' tutorial."
+
+Height = Fin 3
+Width = Fin 8
+
+x = for i:Height. for j:Width. 1.0
+
+x
+
+:t x
+
+import png
+import plot
+
+:html matshow x
+
+:t for i:Height. for j:Width. x[i, j] + 5.0
+
+:t for i. for j. x[i, j] + 5.0
+
+:t for i j. x[i, j] + 5.0
+
+y = for pos: (Height, Width). 1.0
+
+:p y
+
+y5 = for i. y[i] + 5.0
+
+:p y5
+
+:p mean(y5)
+
+:t y
+
+row = x[2 @ Height]
+
+:p row
+:p row[3 @ _]
+
+:t for i:Height. for j:Width. ordinal(i) + ordinal(j)
+
+gradient = for i:Height. for j:Width. n_to_f(ordinal(i) + ordinal(j))
+
+:html matshow gradient
+
+:p for pair:(Fin 3, Fin 3). pair
+:p for pair:(Fin 3, Fin 3). ordinal(pair)
+
+:t y
+:t for i. for j. y[(i, j)]
+
+def add5(x: Float32) -> Float32 =
+  x + 5.0
+
+:p add5 3.0
+:p for i: (Fin 10). add5 $ n_to_f $ ordinal i
+
+def table_add5'(x : n => Float32) -> n => Float32 given (n|Ix) =
+  for i. x[i] + 5.0
+
+:p table_add5' y
+
+def trans(x : m => n => v) -> n => m => v given (n|Ix, m|Ix, v) =
+  for i j.  x[j, i]
+
+:t x
+:t trans x
