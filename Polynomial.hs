@@ -84,10 +84,9 @@ main :: IO ()
 main = do
   -- f(x) = 1 + 2x + 3x^2
   let f = poly [1, 2, 3]
-  -- -- g(x) = -8 + 17x + 5x^3
+  -- g(x) = -8 + 17x + 5x^3
   let g = poly [-8, 17, 0, 5]
 
-  -- print $ uncurry zip $ coes $ fillZeros f g
   print $ f + g
   print $ f * g
   print $ eval f 1
