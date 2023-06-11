@@ -26,7 +26,8 @@ instance Show Polynomial where
       map f (zip coefficients [0..])
     where
       f (coe, 0) = show coe
-      f (coe, idx) = show coe <> [indeterminate] <> "^" <> show idx
+      f (coe, 1) = show coe <> pure indeterminate
+      f (coe, idx) = show coe <> pure indeterminate <> "^" <> show idx
 
 poly :: [Float] -> Polynomial
 poly = Polynomial 'x'
@@ -47,11 +48,8 @@ polyadd [] ys = ys
 polyadd xs [] = xs
 polyadd (x:xs) (y:ys) = (x+y) : polyadd xs ys
 
-polyscale :: Num a => a -> [a] -> [a]
-polyscale a = map (a*)
-
 polymult :: Num a => [a] -> [a] -> [a]
-polymult ys = foldr (\x acc -> polyadd (polyscale x ys) (0 : acc)) []
+polymult ys = foldr (\x acc -> polyadd (map (x*) ys) (0 : acc)) []
 
 instance Num Polynomial where
   (+) = poly . uncurry polyadd . coes ... (,)
@@ -59,7 +57,7 @@ instance Num Polynomial where
   negate = poly . (map negate) . coefficients
   abs = poly . (map abs) . coefficients
   signum = poly . (map signum) . coefficients
-  fromInteger x = poly [fromInteger x]
+  fromInteger x = poly (pure (fromInteger x))
 
 type Point = (Float, Float)
 
@@ -84,8 +82,8 @@ main :: IO ()
 main = do
   -- f(x) = 1 + 2x + 3x^2
   let f = poly [1, 2, 3]
-  -- g(x) = -8 + 17x + 5x^3
-  let g = poly [-8, 17, 0, 5]
+  -- g(x) = -8 + 17x + x^2 + 5x^3
+  let g = poly [-8, 17, 1, 5]
 
   print $ f + g
   print $ f * g
